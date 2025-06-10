@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Aventura RPG</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-backdrop-custom {
+      background-color: rgba(0, 0, 0, 0.85);
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1050;
+    }
+
+    .modal-content-custom {
+      background: rgba(34, 34, 34, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 0 15px #0f0;
+      color: #eee;
+      max-width: 600px;
+      width: 90%;
+      padding: 2rem;
+      text-shadow: 0 0 5px black;
+    }
+
+    .btn-next {
+      display: none;
+      margin-top: 1rem;
+      background-color: #004400;
+      border-color: #004400;
+    }
+
+    /* Para escurecer as imagens de fundo */
+    .modal-content-custom::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+      border-radius: 1rem;
+    }
+
+    .modal-content-custom > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-next {
+      display: none;
+      margin-top: 1rem;
+      background-color: #004400;
+      border-color: #004400;
+      cursor: pointer;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.4rem;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn-next:hover {
+      background-color: #006600;
+    }
+
+    /* Layout para fase lado a lado */
+    .fase-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      color: #eee;
+    }
+
+    .imagem-fase {
+      flex: 1 1 300px;
+      max-width: 400px;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .imagem-fase img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 1rem;
+    }
+
+    .texto-fase {
+      flex: 1 1 400px;
+      color: #eee;
+      text-shadow: 0 0 5px black;
+    }
+
+    .texto-fase h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .options button {
+      cursor: pointer;
+    }
+
+    /* Estilos para modalInicio */
+    #modalInicio .modal-content-custom {
+      max-width: 600px;
+      width: 90%;
+      background: rgba(34, 34, 34, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 0 15px #0f0;
+      position: relative;
+      text-shadow: 0 0 5px black;
+    }
+
+    /* Imagens classe */
+    #imgClasse {
+      max-width: 200px;
+      border-radius: 8px;
+      display: none;
+      margin: 0 auto;
+    }
+    .dado-girando {
+      font-size: 4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+      animation: girarDado 1.5s linear infinite;
+    }
+
+    @keyframes girarDado {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+  </style>
+</head>
+<body>
+
+
+<!-- Modal Inicial -->
+<div id="modalInicio" class="modal-backdrop-custom">
+  <div class="modal-content-custom text-center">
+    <h2 class="mb-3">Bem-vindo à Aventura RPG!</h2>
+    <p class="mb-4">Digite o nome do seu personagem e escolha sua classe para começar.</p>
+    <input type="text" id="nomePersonagem" class="form-control mb-3" placeholder="Nome do personagem" />
+
+    <select id="classePersonagem" class="form-select mb-3" aria-label="Escolha a classe">
+      <option value="" disabled selected>Escolha a classe</option>
+      <option value="Guerreiro">Guerreiro</option>
+      <option value="Mago">Mago</option>
+      <option value="Ladino">Ladino</option>
+      <option value="Arqueiro">Arqueiro</option>
+    </select>
+
+    <!-- Espaço para imagem da classe -->
+    <div class="mb-3">
+      <img id="imgClasse" src="" alt="Imagem da classe" style="max-width: 200px; border-radius: 8px; display: none;" />
+    </div>
+
+    <button id="btnComecar" class="btn btn-success btn-lg fw-bold w-100">Começar Aventura</button>
+  </div>
+</div>
+
+<script>
+  const imgClasse = document.getElementById('imgClasse');
+  const selectClasse = document.getElementById('classePersonagem');
+
+  selectClasse.addEventListener('change', () => {
+    let src = '';
+    switch (selectClasse.value) {
+      case 'Guerreiro':
+        src = 'img/guerreiro.jpg';  
+        break;
+      case 'Mago':
+        src = 'img/mago.jpg';       
+        break;
+      case 'Ladino':
+        src = 'img/ladino.jpg';     
+        break;
+      case 'Arqueiro':
+        src = 'img/arqueiro.jpg';  
+        break;
+      default:
+        src = '';
+    }
+
+    if (src) {
+      imgClasse.src = src;
+      imgClasse.style.display = 'block';
+    } else {
+      imgClasse.style.display = 'none';
+    }
+  });
+</script>
+
+
+<!-- Fase 1 -->
+<div id="fase1" class="modal-backdrop-custom">
+  <div class="modal-content-custom fase-container">
+    <div class="imagem-fase">
+      <img src="img/taverna.jpg" alt="Taverna Três Facas" />
+    </div>
+    <div class="texto-fase">
+      <h2>⚔️ Fase 1 – A Taverna e o Desafio</h2>
+      <p><em>Narrador:</em></p>
+      <p>Você se acomoda em uma cadeira instável da Taverna Três Facas...</p>
+      <p>Sem se apresentar, diz:<br>“Preciso de alguém com coragem ou falta de juízo...”</p>
+      <p><strong>Escolhas:</strong></p>
+      <div class="d-grid gap-2 options mb-3">
+        <button class="btn btn-success" onclick="escolherOpcao(1, 'Ouvir o plano inteiro, mas não prometer nada.')">Ouvir o plano inteiro, mas não prometer nada.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(1, 'Aceitar o trabalho, mas exigir metade do pagamento adiantado.')">Aceitar o trabalho, mas exigir metade do pagamento adiantado.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(1, 'Fingir interesse, só para roubar o mapa depois.')">Fingir interesse, só para roubar o mapa depois.</button>
+      </div>
+      <p id="resultado1" class="fs-5"></p>
+      <div id="dadoGirando1" class="dado-girando" style="display:none;">🎲</div>
+      <button id="btnProximo1" class="btn-next" onclick="abrirFase(2)">Próximo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fase 2 -->
+<div id="fase2" class="modal-backdrop-custom">
+  <div class="modal-content-custom fase-container">
+    <div class="imagem-fase">
+      <img src="img/encruzilhada.jpg" alt="Encruzilhada" />
+    </div>
+    <div class="texto-fase">
+      <h2>🌲 Fase 2 – A Encruzilhada</h2>
+      <p><em>Narrador:</em></p>
+      <p>Após horas de viagem, você chega a uma encruzilhada mal sinalizada.</p>
+      <p>Um lado leva pela trilha comercial — aberta, previsível, cheia de olhos curiosos.<br>
+      O outro cruza uma mata densa, rota de bandidos e feras, mas mais curta.<br>
+      O tempo está contra você. E alguém parece te seguir.</p>
+      <p><strong>Escolhas:</strong></p>
+      <div class="d-grid gap-2 options mb-3">
+        <button class="btn btn-success" onclick="escolherOpcao(2, 'Seguir pela mata, em silêncio.')">Seguir pela mata, em silêncio.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(2, 'Tomar a trilha aberta, mas disfarçado.')">Tomar a trilha aberta, mas disfarçado.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(2, 'Esperar e confrontar quem te segue.')">Esperar e confrontar quem te segue.</button>
+      </div>
+      <p id="resultado2" class="fs-5"></p>
+      <div id="dadoGirando2" class="dado-girando" style="display:none;">🎲</div>
+      <button id="btnProximo2" class="btn-next" onclick="abrirFase(3)">Próximo</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Fase 3 -->
+<div id="fase3" class="modal-backdrop-custom">
+  <div class="modal-content-custom fase-container">
+    <div class="imagem-fase">
+      <img src="img/dragao.jpg" alt="Dragão Guardião" />
+    </div>
+    <div class="texto-fase">
+      <h2>🐉 Fase 3 – O Guardião</h2>
+      <p><em>Narrador:</em></p>
+      <p>A entrada da cripta está à frente. Mas algo enorme bloqueia o caminho: um dragão antigo, de escamas opacas e olhar quase humano. Ele não ataca. Apenas observa.</p>
+      <p>Você percebe: ele está cansado... ou entediado. O artefato está logo atrás dele. Silêncio pesa no ar.</p>
+      <p><strong>Escolhas:</strong></p>
+      <div class="d-grid gap-2 options mb-3">
+        <button class="btn btn-success" onclick="escolherOpcao(3, 'Falar com ele. Nada de bravatas, só franqueza. E uma proposta.')">Falar com ele. Nada de bravatas, só franqueza. E uma proposta.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(3, 'Esperar a noite cair e tentar passar despercebido.')">Esperar a noite cair e tentar passar despercebido.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(3, 'Atacar antes que ele reaja.')">Atacar antes que ele reaja.</button>
+      </div>
+      <p id="resultado3" class="fs-5"></p>
+      <div id="dadoGirando3" class="dado-girando" style="display:none;">🎲</div>
+      <button id="btnProximo3" class="btn-next" onclick="finalizarAventura()">Finalizar Aventura</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal Final -->
+<div id="modalFinal" class="modal-backdrop-custom" style="display:none;">
+  <div class="modal-content-custom text-center">
+    <h2>Aventura Finalizada!</h2>
+    <p id="mensagemFinal" class="fs-5 mb-4"></p>
+    <button class="btn btn-primary btn-lg" onclick="reiniciarJogo()">Jogar Novamente</button>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  let nome = '';
+  let classe = '';
+
+  window.onload = () => {
+    mostrarModalInicio();
+  };
+
+  function mostrarModalInicio() {
+    document.getElementById('modalInicio').style.display = 'flex';
+    [1, 2, 3].forEach(i => {
+      document.getElementById('fase' + i).style.display = 'none';
+      document.getElementById('btnProximo' + i).style.display = 'none';
+      document.getElementById('resultado' + i).textContent = '';
+      const buttons = document.querySelectorAll(`#fase${i} .options button`);
+      buttons.forEach(btn => btn.disabled = false);
+    });
+    document.getElementById('modalFinal').style.display = 'none';
+  }
+
+  document.getElementById('btnComecar').addEventListener('click', () => {
+    const nomeInput = document.getElementById('nomePersonagem').value.trim();
+    const classeSelect = document.getElementById('classePersonagem').value;
+
+    if (!nomeInput) {
+      alert('Por favor, digite o nome do personagem.');
+      return;
+    }
+    if (!classeSelect) {
+      alert('Por favor, escolha uma classe.');
+      return;
+    }
+
+    nome = nomeInput;
+    classe = classeSelect;
+
+    document.getElementById('modalInicio').style.display = 'none';
+    abrirFase(1);
+  });
+
+  function abrirFase(numero) {
+    [1, 2, 3].forEach(i => {
+      document.getElementById('fase' + i).style.display = 'none';
+    });
+    document.getElementById('fase' + numero).style.display = 'flex';
+  }
+
+// Função para gerar número aleatório de 1 a 20 (dado d20)
+function rolarDado() {
+  return Math.floor(Math.random() * 20) + 1;
+}
+
+function escolherOpcao(fase, textoEscolha) {
+  const resultado = document.getElementById('resultado' + fase);
+  const dado = document.getElementById('dadoGirando' + fase);
+  const btnProximo = document.getElementById('btnProximo' + fase);
+
+  // Reset
+  resultado.textContent = '';
+  btnProximo.style.display = 'none';
+  dado.style.display = 'flex';
+
+  setTimeout(() => {
+    dado.style.display = 'none';
+
+    const rolagem = rolarDado();
+    let tipo = '';
+
+    if (rolagem === 1) {
+      tipo = 'Falha crítica';
+    } else if (rolagem <= 8) {
+      tipo = 'Falha';
+    } else if (rolagem <= 14) {
+      tipo = 'Sucesso parcial';
+    } else if (rolagem <= 19) {
+      tipo = 'Sucesso';
+    } else {
+      tipo = 'Sucesso crítico';
+    }
+
+    // Determina a mensagem com base na fase
+    let mensagem = '';
+    if (fase === 1) {
+      mensagem = resultadoFase1(textoEscolha, rolagem, tipo);
+    } else if (fase === 2) {
+      mensagem = resultadoFase2(textoEscolha, rolagem, tipo);
+    } else if (fase === 3) {
+      mensagem = resultadoFase3(textoEscolha, rolagem, tipo);
+    }
+
+    resultado.innerHTML = `
+      Você escolheu: <strong>${textoEscolha}</strong><br>
+      Rolagem de dado: 🎲 <strong>${rolagem}</strong><br>
+      ${mensagem}
+    `;
+
+    btnProximo.style.display = 'inline-block';
+  }, 1500);
+}
+
+
+
+// Ajusta as mensagens conforme novo esquema
+
+function resultadoFase1(escolha, dado, tipo) {
+  switch(tipo) {
+    case 'Falha crítica':
+      return 'Você falhou gravemente!';
+    case 'Falha':
+      return 'Sua decisão não foi das melhores e complicou sua jornada.';
+    case 'Sucesso parcial':
+      return 'Você teve um progresso, mas ainda há riscos a enfrentar.';
+    case 'Sucesso':
+      return 'Ótimo! Sua escolha trouxe bons resultados.';
+    case 'Sucesso crítico':
+      return 'Incrível! Você conseguiu um sucesso extraordinário!';
+  }
+}
+
+function resultadoFase2(escolha, dado, tipo) {
+  switch(tipo) {
+    case 'Falha crítica':
+      return 'Você foi pego de surpresa! A situação piorou muito.';
+    case 'Falha':
+      return 'Sua tentativa falhou, causando problemas no caminho.';
+    case 'Sucesso parcial':
+      return 'Você avançou, mas com alguns percalços.';
+    case 'Sucesso':
+      return 'Você navegou bem pela situação e seguiu adiante.';
+    case 'Sucesso crítico':
+      return 'Você encontrou uma solução brilhante e rápida!';
+  }
+}
+
+function resultadoFase3(escolha, dado, tipo) {
+  switch(tipo) {
+    case 'Falha crítica':
+      return 'Sua ação desastrosa causou um fim prematuro para sua aventura.';
+    case 'Falha':
+      return 'Você falhou, mas ainda há chance de se recuperar.';
+    case 'Sucesso parcial':
+      return 'Seu sucesso é parcial, o caminho ainda tem desafios.';
+    case 'Sucesso':
+      return 'Você venceu este desafio com mérito.';
+    case 'Sucesso crítico':
+      return 'Vitória épica! Você conquistou um feito memorável.';
+  }
+}
+
+
+function finalizarAventura() {
+  // Esconder TODAS as fases, explicitamente
+  [1, 2, 3].forEach(i => {
+    document.getElementById('fase' + i).style.display = 'none';
+  });
+
+  // Exibe a modal final
+  let msg = `Eu amo você! Feliz Dia dos Namorados 💖`;
+  document.getElementById('mensagemFinal').textContent = msg;
+  document.getElementById('modalFinal').style.display = 'flex';
+}
+
+
+
+
+  function reiniciarJogo() {
+    nome = '';
+    classe = '';
+    document.getElementById('nomePersonagem').value = '';
+    document.getElementById('classePersonagem').selectedIndex = 0;
+    mostrarModalInicio();
+  }
+</script>
+
+</body>
+</html>
