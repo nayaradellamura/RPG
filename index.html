@@ -6,159 +6,8 @@
   <title>Mini Aventura RPG</title>
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-
+  <link rel="stylesheet" href="css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <style>
-    body {
-      font-family: 'Georgia', serif;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    .modal-backdrop-custom {
-      background-color: rgba(0, 0, 0, 0.85);
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1050;
-      padding: 1rem; /* importante para espaçamento interno */
-      overflow-y: auto; /* permite scroll se conteúdo for maior que a tela */
-    }
-  
-    .modal-content-custom {
-      background: rgba(34, 34, 34, 0.95);
-      border-radius: 1rem;
-      box-shadow: 0 0 15px #0f0;
-      color: #eee;
-      max-width: 600px;
-      width: 100%; /* faz o modal ocupar 100% do container */
-      padding: 2rem;
-      text-shadow: 0 0 5px black;
-      position: relative;
-    }
-  
-    /* Para escurecer o fundo do modal */
-    .modal-content-custom::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 0;
-      border-radius: 1rem;
-    }
-  
-    .modal-content-custom > * {
-      position: relative;
-      z-index: 1;
-    }
-  
-    .btn-next {
-      display: none;
-      margin-top: 1rem;
-      background-color: #004400;
-      border-color: #004400;
-      cursor: pointer;
-      padding: 0.6rem 1.2rem;
-      border-radius: 0.4rem;
-      color: white;
-      font-weight: bold;
-      font-size: 1rem;
-      border: none;
-      transition: background-color 0.3s ease;
-    }
-    .btn-next:hover {
-      background-color: #006600;
-    }
-  
-    /* Container da fase: layout flex adaptável */
-    .fase-container {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-      color: #eee;
-    }
-  
-    .imagem-fase {
-      flex: 1 1 100%;
-      max-width: 100%;
-      border-radius: 1rem;
-      overflow: hidden;
-      box-shadow: 0 0 10px #0f0;
-    }
-  
-    .imagem-fase img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 1rem;
-    }
-  
-    .texto-fase {
-      flex: 1 1 100%;
-      color: #eee;
-      text-shadow: 0 0 5px black;
-      margin-top: 1rem;
-    }
-  
-    .texto-fase h2 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-  
-    .options button {
-      cursor: pointer;
-    }
-  
-    /* Quando a tela for maior que 768px (tablet para cima), mostra lado a lado */
-    @media (min-width: 768px) {
-      .imagem-fase {
-        flex: 1 1 45%;
-        max-width: 45%;
-      }
-      .texto-fase {
-        flex: 1 1 50%;
-        max-width: 50%;
-        margin-top: 0;
-      }
-    }
-  
-    /* Imagem da classe no modal inicial */
-    #imgClasse {
-      max-width: 200px;
-      border-radius: 8px;
-      display: none;
-      margin: 0 auto 1rem auto;
-    }
-  
-    .dado-girando {
-      font-size: 4rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 1rem 0;
-      animation: girarDado 1.5s linear infinite;
-    }
-  
-    @keyframes girarDado {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-  
 </head>
 <body>
 
@@ -173,6 +22,10 @@
     <select id="classePersonagem" class="form-select mb-3" aria-label="Escolha a classe">
       <option value="" disabled selected>Escolha a classe</option>
       <option value="Guerreiro">Guerreiro</option>
+      <option value="Cavaleiro">Cavaleiro</option>
+      <option value="Bárbaro">Bárbaro</option>
+      <option value="Druida">Druida</option>
+      <option value="Bardo">Bardo</option>
       <option value="Mago">Mago</option>
       <option value="Ladino">Ladino</option>
       <option value="Arqueiro">Arqueiro</option>
@@ -206,6 +59,18 @@
       case 'Arqueiro':
         src = 'img/arqueiro.jpg';  
         break;
+      case 'Cavaleiro':
+        src = 'img/cavaleiro.jpg';  
+      break;
+      case 'Bárbaro':
+        src = 'img/barbaro.jpg';  
+      break;
+      case 'Druida':
+        src = 'img/druida.jpg';  
+      break;
+      case 'Bardo':
+        src = 'img/bardo.jpg';  
+      break;
       default:
         src = '';
     }
@@ -230,7 +95,7 @@
       <h2>⚔️ Fase 1 – A Taverna e o Desafio</h2>
       <p><em>Narrador:</em></p>
       <p>Você se acomoda em uma cadeira instável da Taverna Três Facas...</p>
-      <p>Sem se apresentar, diz:<br>“Preciso de alguém com coragem ou falta de juízo...”</p>
+      <p>O Taverneiro sem se apresentar, diz:<br>“Preciso de alguém com coragem ou falta de juízo...”</p>
       <p><strong>Escolhas:</strong></p>
       <div class="d-grid gap-2 options mb-3">
         <button class="btn btn-success" onclick="escolherOpcao(1, 'Ouvir o plano inteiro, mas não prometer nada.')">Ouvir o plano inteiro, mas não prometer nada.</button>
@@ -254,7 +119,7 @@
       <h2>🌲 Fase 2 – A Encruzilhada</h2>
       <p><em>Narrador:</em></p>
       <p>Após horas de viagem, você chega a uma encruzilhada mal sinalizada.</p>
-      <p>Um lado leva pela trilha comercial — aberta, previsível, cheia de olhos curiosos.<br>
+      <p>Um lado leva pela trilha comercial, aberta, previsível, cheia de olhos curiosos.<br>
       O outro cruza uma mata densa, rota de bandidos e feras, mas mais curta.<br>
       O tempo está contra você. E alguém parece te seguir.</p>
       <p><strong>Escolhas:</strong></p>
@@ -284,7 +149,7 @@
       <p>Você percebe: ele está cansado... ou entediado. O artefato está logo atrás dele. Silêncio pesa no ar.</p>
       <p><strong>Escolhas:</strong></p>
       <div class="d-grid gap-2 options mb-3">
-        <button class="btn btn-success" onclick="escolherOpcao(3, 'Falar com ele. Nada de bravatas, só franqueza. E uma proposta.')">Falar com ele. Nada de bravatas, só franqueza. E uma proposta.</button>
+        <button class="btn btn-success" onclick="escolherOpcao(3, 'Falar com ele. Nada de bravatas, só franqueza. E uma proposta.')">Falar com ele e fazer uma proposta.</button>
         <button class="btn btn-success" onclick="escolherOpcao(3, 'Esperar a noite cair e tentar passar despercebido.')">Esperar a noite cair e tentar passar despercebido.</button>
         <button class="btn btn-success" onclick="escolherOpcao(3, 'Atacar antes que ele reaja.')">Atacar antes que ele reaja.</button>
       </div>
@@ -294,8 +159,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- Modal Final -->
 <div id="modalFinal" class="modal-backdrop-custom" style="display:none;">
@@ -416,47 +279,49 @@ function escolherOpcao(fase, textoEscolha) {
 function resultadoFase1(escolha, dado, tipo) {
   switch(tipo) {
     case 'Falha crítica':
-      return 'Você falhou gravemente!';
+      return 'Você tropeça nas próprias botas e cai diante do taverneiro. Envergonhado, aceita a missão de graça, sob o riso dos presentes.';
     case 'Falha':
-      return 'Sua decisão não foi das melhores e complicou sua jornada.';
+      return 'O taverneiro franze a testa e menciona uma dívida antiga. Sem escolha, você aceita realizar a missão sem pagamento.';
     case 'Sucesso parcial':
-      return 'Você teve um progresso, mas ainda há riscos a enfrentar.';
+      return 'Você aceita a missão, mas um mal-entendido no acordo pode te custar algo mais adiante.';
     case 'Sucesso':
-      return 'Ótimo! Sua escolha trouxe bons resultados.';
+      return 'Com postura firme, você conquista a confiança do taverneiro e segue para a missão sem impedimentos.';
     case 'Sucesso crítico':
-      return 'Incrível! Você conseguiu um sucesso extraordinário!';
+      return 'Com um toque de sorte e palavras certeiras, você garante a missão e ainda receberá em dobro pela ousadia.';
   }
 }
+
 
 function resultadoFase2(escolha, dado, tipo) {
   switch(tipo) {
     case 'Falha crítica':
-      return 'Você foi pego de surpresa! A situação piorou muito.';
+      return 'Você foi pego de surpresa! A situação se agravou bastante, mas com esforço consegue seguir seu caminho, ainda que cambaleando.';
     case 'Falha':
-      return 'Sua tentativa falhou, causando problemas no caminho.';
+      return 'Sua tentativa falhou, gerando contratempos que atrasam sua jornada e chamam atenção indesejada.';
     case 'Sucesso parcial':
-      return 'Você avançou, mas com alguns percalços.';
+      return 'Você prosseguiu, mas enfrentou obstáculos inesperados que testaram sua determinação.';
     case 'Sucesso':
-      return 'Você navegou bem pela situação e seguiu adiante.';
+      return 'Você enfrentou o desafio com firmeza e seguiu pela trilha sem grandes dificuldades.';
     case 'Sucesso crítico':
-      return 'Você encontrou uma solução brilhante e rápida!';
+      return 'Com astúcia e precisão, você encontrou uma solução perfeita e avançou como um verdadeiro herói.';
   }
 }
 
 function resultadoFase3(escolha, dado, tipo) {
   switch(tipo) {
     case 'Falha crítica':
-      return 'Sua ação desastrosa causou um fim prematuro para sua aventura.';
+      return 'Sua ação desastrosa trouxe um fim trágico e prematuro à sua jornada. As lendas não cantarão seu nome.';
     case 'Falha':
-      return 'Você falhou, mas ainda há chance de se recuperar.';
+      return 'Você falhou neste momento, mas as chamas da esperança ainda ardem, a aventura continua.';
     case 'Sucesso parcial':
-      return 'Seu sucesso é parcial, o caminho ainda tem desafios.';
+      return 'Você teve algum êxito, mas as pedras no caminho ainda exigem coragem e cautela.';
     case 'Sucesso':
-      return 'Você venceu este desafio com mérito.';
+      return 'Com bravura e habilidade, você supera o desafio e avança com honra.';
     case 'Sucesso crítico':
-      return 'Vitória épica! Você conquistou um feito memorável.';
+      return 'Uma vitória digna dos bardos! Seu feito será contado em tavernas por muitas gerações.';
   }
 }
+
 
 
 function finalizarAventura() {
@@ -466,8 +331,13 @@ function finalizarAventura() {
   });
 
   // Exibe a modal final
-  let msg = `Eu amo você! Feliz Dia dos Namorados 💖`;
-  document.getElementById('mensagemFinal').textContent = msg;
+  let msg = `Seus passos ecoam na história. Seja lenda, herói ou apenas memória, sua jornada termina... por agora.
+
+💖 Eu amo você! Feliz Dia dos Namorados 💖`;
+
+document.getElementById("mensagemFinal").innerText = msg;
+document.getElementById('modalFinal').style.display = 'flex';
+
   document.getElementById('modalFinal').style.display = 'flex';
 }
 

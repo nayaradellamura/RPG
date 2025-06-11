@@ -1,0 +1,156 @@
+body {
+    font-family: 'Georgia', serif;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-backdrop-custom {
+    background-color: rgba(0, 0, 0, 0.85);
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    padding: 1rem; /* importante para espaçamento interno */
+    overflow-y: auto; /* permite scroll se conteúdo for maior que a tela */
+  }
+
+  .modal-content-custom {
+    background: rgba(34, 34, 34, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #0f0;
+    color: #eee;
+    max-width: 600px;
+    width: 100%; /* faz o modal ocupar 100% do container */
+    padding: 2rem;
+    text-shadow: 0 0 5px black;
+    position: relative;
+  }
+
+  /* Para escurecer o fundo do modal */
+  .modal-content-custom::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+    border-radius: 1rem;
+  }
+
+  .modal-content-custom > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-next {
+    display: none;
+    margin-top: 1rem;
+    background-color: #004400;
+    border-color: #004400;
+    cursor: pointer;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.4rem;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-next:hover {
+    background-color: #006600;
+  }
+
+  /* Container da fase: layout flex adaptável */
+  .fase-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    color: #eee;
+  }
+
+  .imagem-fase {
+    flex: 1 1 100%;
+    max-width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0 10px #0f0;
+  }
+
+  .imagem-fase img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1rem;
+  }
+
+  .texto-fase {
+    flex: 1 1 100%;
+    color: #eee;
+    text-shadow: 0 0 5px black;
+    margin-top: 1rem;
+  }
+
+  .texto-fase h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .options button {
+    cursor: pointer;
+  }
+
+  /* Quando a tela for maior que 768px (tablet para cima), mostra lado a lado */
+  @media (min-width: 768px) {
+    .imagem-fase {
+      flex: 1 1 45%;
+      max-width: 45%;
+    }
+    .texto-fase {
+      flex: 1 1 50%;
+      max-width: 50%;
+      margin-top: 0;
+    }
+  }
+
+  /* Imagem da classe no modal inicial */
+  #imgClasse {
+    max-width: 200px;
+    border-radius: 8px;
+    display: none;
+    margin: 0 auto 1rem auto;
+  }
+
+  .dado-girando {
+    font-size: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    animation: girarDado 1.5s linear infinite;
+  }
+
+  @keyframes girarDado {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes fadeInScale {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .modal-content-custom {
+    animation: fadeInScale 0.6s ease-out;
+  }
+  
